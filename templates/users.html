@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<section class="page-heading">
+
+    <p class="eyebrow">
+        DATABASE
+    </p>
+
+
+    <h1>
+        All Users
+    </h1>
+
+
+    <p>
+        Users and generated FitBuddy plans
+        stored in the local SQLite database.
+    </p>
+
+</section>
+
+
+
+{% if users %}
+
+
+<div class="card table-card">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+    <th>
+        User ID
+    </th>
+
+    <th>
+        Name
+    </th>
+
+    <th>
+        Age
+    </th>
+
+    <th>
+        Weight
+    </th>
+
+    <th>
+        Goal
+    </th>
+
+    <th>
+        Intensity
+    </th>
+
+    <th>
+        Plan
+    </th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+{% for user in users %}
+
+
+{% set ns = namespace(plan=None) %}
+
+
+{% for plan in plans %}
+
+    {% if
+        plan.user_id == user.user_id
+        and ns.plan is none
+    %}
+
+        {% set ns.plan = plan %}
+
+    {% endif %}
+
+{% endfor %}
+
+
+
+<tr>
+
+
+    <td>
+        {{ user.user_id }}
+    </td>
+
+
+    <td>
+        {{ user.name }}
+    </td>
+
+
+    <td>
+        {{ user.age }}
+    </td>
+
+
+    <td>
+        {{ user.weight }} kg
+    </td>
+
+
+    <td>
+        {{ user.goal }}
+    </td>
+
+
+    <td>
+        {{ user.intensity|title }}
+    </td>
+
+
+    <td>
+
+
+        {% if ns.plan %}
+
+
+        <details>
+
+            <summary>
+                View Plan
+            </summary>
+
+
+            <h4>
+                Original Plan
+            </h4>
+
+
+            <pre>
+{{ ns.plan.original_plan }}
+            </pre>
+
+
+            {% if ns.plan.updated_plan %}
+
+            <h4>
+                Updated Plan
+            </h4>
+
+
+            <pre>
+{{ ns.plan.updated_plan }}
+            </pre>
+
+            {% endif %}
+
+
+        </details>
+
+
+        {% else %}
+
+            No plan
+
+        {% endif %}
+
+
+    </td>
+
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+{% else %}
+
+
+<div class="card empty">
+
+    <h2>
+        No users yet
+    </h2>
+
+    <p>
+        Generate your first FitBuddy plan.
+    </p>
+
+</div>
+
+
+{% endif %}
+
+
+{% endblock %}
